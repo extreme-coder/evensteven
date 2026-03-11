@@ -1,0 +1,42 @@
+{
+  "sample_rate": 48000,
+  "frame_size": 4096,
+  "hop_size": 1024,
+  "fft_size": 4096,
+  "loudness": {
+    "block_size_ms": 400,
+    "overlap_percent": 75,
+    "absolute_gate_lufs": -70.0,
+    "relative_gate_offset_lu": -10.0,
+    "shortterm_window_ms": 3000,
+    "momentary_window_ms": 400
+  },
+  "balance": {
+    "vocal_low_hz": 300,
+    "vocal_high_hz": 3400,
+    "masking_threshold_db": -3.0
+  },
+  "bands": {
+    "low": { "min_hz": 20, "max_hz": 250 },
+    "mid": { "min_hz": 250, "max_hz": 4000 },
+    "high": { "min_hz": 4000, "max_hz": 20000 }
+  },
+  "segmentation": {
+    "smoothing_window_s": 2.0,
+    "energy_change_threshold_db": 6.0,
+    "silence_threshold_db": -40.0,
+    "min_silence_duration_s": 1.0,
+    "min_segment_duration_s": 5.0
+  },
+  "scoring": {
+    "good_threshold": 0.7,
+    "fair_threshold": 0.4,
+    "target_lufs": -14.0,
+    "lufs_tolerance": 2.0
+  },
+  "export": {
+    "format": "both",
+    "include_timelines": true,
+    "timeline_resolution_ms": 100
+  }
+}

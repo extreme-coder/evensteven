@@ -1,0 +1,54 @@
+# Build directories
+build/
+cpp/build/
+cmake-build-*/
+
+# Node
+node_modules/
+dist/
+dist-electron/
+gui/node_modules/
+gui/dist/
+gui/dist-electron/
+gui/out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Binaries
+*.exe
+*.dmg
+*.AppImage
+*.snap
+*.deb
+*.rpm
+
+# Output
+output/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude
+.claude/
+
+# Generated audio (keep examples)
+*.wav
+!examples/audio/*.wav
+
+# Compiled objects
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib

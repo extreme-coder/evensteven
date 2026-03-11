@@ -1,0 +1,48 @@
+appId: com.evensteven.app
+productName: EvenSteven
+directories:
+  buildResources: build
+  output: out
+
+extraResources:
+  - from: ../cpp/build/evensteven
+    to: bin/evensteven
+    filter:
+      - "!*.pdb"
+  - from: ../examples/
+    to: examples/
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+
+mac:
+  category: public.app-category.music
+  target:
+    - dmg
+    - zip
+  icon: build/icon.icns
+
+win:
+  target:
+    - nsis
+  icon: build/icon.ico
+
+linux:
+  target:
+    - AppImage
+  category: Audio
+  icon: build/icon.png
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
