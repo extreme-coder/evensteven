@@ -22,7 +22,7 @@ export default function RecommendationsList({ recommendations, level }: Props) {
         <ul className="space-y-2">
           {recommendations.map((rec, i) => (
             <li key={i} className="flex items-start gap-2 text-sm">
-              <span className={`mt-0.5 shrink-0 ${isPositive(rec) ? 'text-green-500' : 'text-yellow-500'}`}>
+              <span className={`mt-0.5 shrink-0 ${isPositive(rec) ? 'text-chart-1' : 'text-chart-4'}`}>
                 {isPositive(rec) ? '\u2713' : '\u26A0'}
               </span>
               <span>{rec}</span>

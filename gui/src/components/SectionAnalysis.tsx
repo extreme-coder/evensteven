@@ -41,9 +41,9 @@ export default function SectionAnalysis({ song }: Props) {
   })
 
   const maskingColor = (pct: number) => {
-    if (pct > 30) return 'text-red-500'
-    if (pct > 10) return 'text-yellow-500'
-    return 'text-green-500'
+    if (pct > 30) return 'text-destructive'
+    if (pct > 10) return 'text-chart-4'
+    return 'text-chart-1'
   }
 
   return (

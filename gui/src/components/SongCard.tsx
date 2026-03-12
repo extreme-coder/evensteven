@@ -11,11 +11,11 @@ export default function SongCard({ song, viewMode }: Props) {
   const gradeColor = (grade: string) => {
     switch (grade) {
       case 'Good':
-        return 'bg-green-500/10 text-green-700 border-green-200'
+        return 'bg-chart-1/10 text-chart-1 border-chart-1/20'
       case 'Fair':
-        return 'bg-yellow-500/10 text-yellow-700 border-yellow-200'
+        return 'bg-chart-4/10 text-chart-4 border-chart-4/20'
       default:
-        return 'bg-red-500/10 text-red-700 border-red-200'
+        return 'bg-destructive/10 text-destructive border-destructive/20'
     }
   }
 

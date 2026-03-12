@@ -46,30 +46,31 @@ export default function BalanceChart({ song, viewMode }: Props) {
       <CardContent>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={sampled} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="time"
               tickFormatter={formatTime}
               type="number"
               domain={['dataMin', 'dataMax']}
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
             />
             <YAxis
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
               domain={['auto', 'auto']}
-              label={{ value: 'dB', angle: -90, position: 'insideLeft', style: { fontSize: 11 } }}
+              label={{ value: 'dB', angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: 'var(--muted-foreground)' } }}
             />
             <Tooltip
               labelFormatter={(v) => formatTime(Number(v))}
               formatter={(v: number, name: string) => [v?.toFixed(1) + ' dB', name]}
+              contentStyle={{ backgroundColor: 'var(--popover)', border: '1px solid var(--border)', color: 'var(--popover-foreground)' }}
             />
             <Legend />
-            <ReferenceLine y={-3} stroke="#ef4444" strokeDasharray="5 5" label="" />
+            <ReferenceLine y={-3} stroke="var(--destructive)" strokeDasharray="5 5" label="" />
             <Area
               type="monotone"
               dataKey="vocal"
-              stroke="hsl(142, 71%, 45%)"
-              fill="hsl(142, 71%, 45%)"
+              stroke="var(--chart-1)"
+              fill="var(--chart-1)"
               fillOpacity={0.15}
               strokeWidth={1.5}
               dot={false}
@@ -78,8 +79,8 @@ export default function BalanceChart({ song, viewMode }: Props) {
             <Area
               type="monotone"
               dataKey="accompaniment"
-              stroke="hsl(25, 95%, 53%)"
-              fill="hsl(25, 95%, 53%)"
+              stroke="var(--chart-5)"
+              fill="var(--chart-5)"
               fillOpacity={0.1}
               strokeWidth={1.5}
               dot={false}
