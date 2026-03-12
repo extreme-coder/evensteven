@@ -2,6 +2,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include "evensteven/audio_io.h"
 #include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <vector>
 #include <cstring>
@@ -51,7 +52,7 @@ static void write_test_wav(const std::string& path, int sample_rate, int channel
 }
 
 TEST_CASE("load_audio loads WAV file", "[audio_io]") {
-    std::string path = "/tmp/test_evensteven_audio.wav";
+    std::string path = (std::filesystem::temp_directory_path() / "test_evensteven_audio.wav").string();
     write_test_wav(path, 44100, 2, 44100); // 1 second stereo
 
     auto buf = evensteven::load_audio(path);
@@ -62,7 +63,7 @@ TEST_CASE("load_audio loads WAV file", "[audio_io]") {
 }
 
 TEST_CASE("probe_audio reads metadata", "[audio_io]") {
-    std::string path = "/tmp/test_evensteven_probe.wav";
+    std::string path = (std::filesystem::temp_directory_path() / "test_evensteven_probe.wav").string();
     write_test_wav(path, 48000, 1, 48000);
 
     auto meta = evensteven::probe_audio(path);
@@ -82,5 +83,5 @@ TEST_CASE("is_supported_format", "[audio_io]") {
 }
 
 TEST_CASE("load_audio throws on bad file", "[audio_io]") {
-    REQUIRE_THROWS(evensteven::load_audio("/tmp/nonexistent_file.wav"));
+    REQUIRE_THROWS(evensteven::load_audio((std::filesystem::temp_directory_path() / "nonexistent_file.wav").string()));
 }

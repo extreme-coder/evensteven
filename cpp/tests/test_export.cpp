@@ -62,7 +62,7 @@ TEST_CASE("to_json_string produces valid JSON", "[export]") {
 
 TEST_CASE("export_analysis writes files", "[export]") {
     auto setlist = make_test_setlist();
-    std::string dir = "/tmp/test_evensteven_export";
+    std::string dir = (std::filesystem::temp_directory_path() / "test_evensteven_export").string();
     std::filesystem::remove_all(dir);
 
     evensteven::export_analysis(setlist, dir, setlist.config);
