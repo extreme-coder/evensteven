@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(evensteven_cpp LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 11)
 
@@ -32,6 +32,9 @@ target_include_directories(evensteven_core PUBLIC
     third_party/json
 )
 target_link_libraries(evensteven_core PUBLIC kissfft)
+if(MSVC)
+    target_compile_definitions(evensteven_core PUBLIC _USE_MATH_DEFINES)
+endif()
 
 # CLI executable
 add_executable(evensteven src/main.cpp)
