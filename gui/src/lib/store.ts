@@ -80,7 +80,7 @@ export interface AnalysisResults {
 export interface ProgressInfo {
   stage: string
   percent: number
-  song: string
+  song?: string
 }
 
 type AnalysisStatus = 'idle' | 'running' | 'complete' | 'error'

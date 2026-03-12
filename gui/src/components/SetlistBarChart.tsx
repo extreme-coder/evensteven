@@ -46,7 +46,7 @@ export default function SetlistBarChart({ songs, medianLufs }: Props) {
               label={{ value: 'LUFS', angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: 'var(--muted-foreground)' } }}
             />
             <Tooltip
-              formatter={(v: number) => [v?.toFixed(1) + ' LUFS', 'Integrated']}
+              formatter={(v) => [Number(v).toFixed(1) + ' LUFS', 'Integrated']}
               contentStyle={{ backgroundColor: 'var(--popover)', border: '1px solid var(--border)', color: 'var(--popover-foreground)' }}
             />
             {isFinite(medianLufs) && (

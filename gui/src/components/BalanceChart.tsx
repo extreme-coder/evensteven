@@ -61,7 +61,7 @@ export default function BalanceChart({ song, viewMode }: Props) {
             />
             <Tooltip
               labelFormatter={(v) => formatTime(Number(v))}
-              formatter={(v: number, name: string) => [v?.toFixed(1) + ' dB', name]}
+              formatter={(v, name) => [Number(v).toFixed(1) + ' dB', name]}
               contentStyle={{ backgroundColor: 'var(--popover)', border: '1px solid var(--border)', color: 'var(--popover-foreground)' }}
             />
             <Legend />

@@ -28,11 +28,11 @@ export default function AnalysisPage() {
   const selectedSong = results?.songs.find((s) => s.song_id === selectedSongId)
 
   useEffect(() => {
-    if (window.electronAPI) {
-      return window.electronAPI.onProgress((data) => {
-        useStore.getState().setProgress(data)
-      })
-    }
+    if (!window.electronAPI) return
+    const unsubscribe = window.electronAPI.onProgress((data) => {
+      useStore.getState().setProgress(data)
+    })
+    return () => { unsubscribe() }
   }, [])
 
   const gradeColor = (grade: string) => {

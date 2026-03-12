@@ -58,7 +58,7 @@ export default function LoudnessChart({ song, viewMode }: Props) {
             />
             <Tooltip
               labelFormatter={(v) => formatTime(Number(v))}
-              formatter={(v: number) => [v?.toFixed(1) + ' LUFS', '']}
+              formatter={(v) => [Number(v).toFixed(1) + ' LUFS', '']}
               contentStyle={{ backgroundColor: 'var(--popover)', border: '1px solid var(--border)', color: 'var(--popover-foreground)' }}
             />
             <Legend />
