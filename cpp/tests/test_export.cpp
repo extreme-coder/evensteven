@@ -72,9 +72,11 @@ TEST_CASE("export_analysis writes files", "[export]") {
     REQUIRE(std::filesystem::exists(dir + "/section_summary.csv"));
 
     // Validate JSON
-    std::ifstream f(dir + "/analysis.json");
-    auto j = json::parse(f);
-    REQUIRE(j["songs"].size() == 1);
+    {
+        std::ifstream f(dir + "/analysis.json");
+        auto j = json::parse(f);
+        REQUIRE(j["songs"].size() == 1);
+    }
 
     std::filesystem::remove_all(dir);
 }
