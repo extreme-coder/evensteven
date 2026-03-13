@@ -14,7 +14,6 @@ import type { SongAnalysis } from '@/lib/store'
 
 interface Props {
   song: SongAnalysis
-  viewMode: 'beginner' | 'advanced'
 }
 
 function formatTime(seconds: number) {
@@ -23,12 +22,12 @@ function formatTime(seconds: number) {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-export default function BalanceChart({ song, viewMode }: Props) {
+export default function BalanceChart({ song }: Props) {
   const data = song.balance.timestamps.map((t, i) => ({
     time: t,
     vocal: song.balance.vocal_energy_db[i] ?? null,
     accompaniment: song.balance.accompaniment_energy_db[i] ?? null,
-    balance: viewMode === 'advanced' ? (song.balance.balance_db[i] ?? null) : null,
+    balance: song.balance.balance_db[i] ?? null,
     masked: song.balance.masking_risk[i] ? -100 : null,
   }))
 

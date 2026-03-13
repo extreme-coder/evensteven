@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { useStore } from '@/lib/store'
+import { useStore, type Unit } from '@/lib/store'
 import ProgressIndicator from '@/components/ProgressIndicator'
 import SetlistBarChart from '@/components/SetlistBarChart'
 import SongCard from '@/components/SongCard'
@@ -21,8 +21,10 @@ export default function AnalysisPage() {
     error,
     selectedSongId,
     selectSong,
-    viewMode,
-    setViewMode,
+    unit,
+    setUnit,
+    showAdvancedStats,
+    toggleAdvancedStats,
   } = useStore()
 
   const selectedSong = results?.songs.find((s) => s.song_id === selectedSongId)
@@ -63,12 +65,20 @@ export default function AnalysisPage() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'beginner' | 'advanced')}>
+          <Tabs value={unit} onValueChange={(v) => setUnit(v as Unit)}>
             <TabsList className="h-8">
-              <TabsTrigger value="beginner" className="text-xs px-3">Simple</TabsTrigger>
-              <TabsTrigger value="advanced" className="text-xs px-3">Advanced</TabsTrigger>
+              <TabsTrigger value="lufs" className="text-xs px-3">LUFS</TabsTrigger>
+              <TabsTrigger value="db" className="text-xs px-3">dB</TabsTrigger>
             </TabsList>
           </Tabs>
+          <Button
+            variant={showAdvancedStats ? 'secondary' : 'outline'}
+            size="sm"
+            className="text-xs h-8"
+            onClick={toggleAdvancedStats}
+          >
+            Stats
+          </Button>
         </div>
       </header>
 
@@ -89,9 +99,9 @@ export default function AnalysisPage() {
             <section className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Setlist Overview</h2>
-                {viewMode === 'advanced' && (
+                {showAdvancedStats && (
                   <div className="text-sm text-muted-foreground space-x-4">
-                    <span>Median: {results.setlist.median_lufs?.toFixed(1)} LUFS</span>
+                    <span>Median: {results.setlist.median_lufs?.toFixed(1)} {unit === 'lufs' ? 'LUFS' : 'dB'}</span>
                     <span>Std Dev: {results.setlist.lufs_stddev?.toFixed(1)} dB</span>
                     <span>Consistency: {(results.setlist.consistency_score * 100).toFixed(0)}%</span>
                   </div>
@@ -103,7 +113,6 @@ export default function AnalysisPage() {
               {results.setlist.recommendations.length > 0 && (
                 <RecommendationsList
                   recommendations={results.setlist.recommendations}
-                  level="setlist"
                 />
               )}
             </section>
@@ -131,20 +140,18 @@ export default function AnalysisPage() {
 
                   {results.songs.map((song) => (
                     <TabsContent key={song.song_id} value={song.song_id} className="space-y-6 mt-4">
-                      <SongCard song={song} viewMode={viewMode} />
+                      <SongCard song={song} />
 
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <LoudnessChart song={song} viewMode={viewMode} />
-                        <BalanceChart song={song} viewMode={viewMode} />
+                        <LoudnessChart song={song} />
+                        <BalanceChart song={song} />
                       </div>
 
-                      {viewMode === 'advanced' && (
-                        <SectionAnalysis song={song} />
-                      )}
+                      <SectionAnalysis song={song} />
 
                       <RecommendationsList
                         recommendations={song.recommendations}
-                        level="song"
+                        title={`${song.song_name} Recommendations`}
                       />
 
                       <ExportPanel />

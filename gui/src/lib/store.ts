@@ -84,7 +84,7 @@ export interface ProgressInfo {
 }
 
 type AnalysisStatus = 'idle' | 'running' | 'complete' | 'error'
-type ViewMode = 'beginner' | 'advanced'
+export type Unit = 'lufs' | 'db'
 
 interface AppState {
   // Project
@@ -99,7 +99,8 @@ interface AppState {
 
   // UI
   selectedSongId: string | null
-  viewMode: ViewMode
+  unit: Unit
+  showAdvancedStats: boolean
 
   // Actions
   setProjectName: (name: string) => void
@@ -112,7 +113,8 @@ interface AppState {
   setResults: (results: AnalysisResults | null) => void
   setError: (error: string | null) => void
   selectSong: (id: string | null) => void
-  setViewMode: (mode: ViewMode) => void
+  setUnit: (unit: Unit) => void
+  toggleAdvancedStats: () => void
   reset: () => void
 }
 
@@ -124,7 +126,8 @@ const initialState = {
   results: null as AnalysisResults | null,
   error: null as string | null,
   selectedSongId: null as string | null,
-  viewMode: 'beginner' as ViewMode,
+  unit: 'lufs' as Unit,
+  showAdvancedStats: false,
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -157,7 +160,8 @@ export const useStore = create<AppState>((set) => ({
   setError: (error) => set({ error, status: 'error' }),
 
   selectSong: (id) => set({ selectedSongId: id }),
-  setViewMode: (mode) => set({ viewMode: mode }),
+  setUnit: (unit) => set({ unit }),
+  toggleAdvancedStats: () => set((state) => ({ showAdvancedStats: !state.showAdvancedStats })),
 
   reset: () => set(initialState),
 }))

@@ -1,13 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import type { SongAnalysis } from '@/lib/store'
+import { useStore, type SongAnalysis } from '@/lib/store'
 
 interface Props {
   song: SongAnalysis
-  viewMode: 'beginner' | 'advanced'
 }
 
-export default function SongCard({ song, viewMode }: Props) {
+export default function SongCard({ song }: Props) {
+  const unit = useStore((s) => s.unit)
+  const showAdvancedStats = useStore((s) => s.showAdvancedStats)
+
   const gradeColor = (grade: string) => {
     switch (grade) {
       case 'Good':
@@ -22,6 +24,8 @@ export default function SongCard({ song, viewMode }: Props) {
   const fmt = (v: number | null, digits = 1) =>
     v != null && isFinite(v) ? v.toFixed(digits) : '—'
 
+  const unitLabel = unit === 'lufs' ? 'LUFS' : 'dB'
+
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -35,8 +39,8 @@ export default function SongCard({ song, viewMode }: Props) {
       <CardContent>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <Metric
-            label="Integrated LUFS"
-            value={fmt(song.loudness.integrated_lufs)}
+            label={`Integrated ${unitLabel}`}
+            value={`${fmt(song.loudness.integrated_lufs)} ${unitLabel}`}
           />
           <Metric
             label="Vocal Presence"
@@ -52,7 +56,7 @@ export default function SongCard({ song, viewMode }: Props) {
           />
         </div>
 
-        {viewMode === 'advanced' && (
+        {showAdvancedStats && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3 pt-3 border-t">
             <Metric label="Peak" value={`${fmt(song.loudness.peak_db)} dB`} />
             <Metric label="RMS" value={`${fmt(song.loudness.rms_db)} dB`} />

@@ -2,10 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface Props {
   recommendations: string[]
-  level: 'setlist' | 'song'
+  title?: string
 }
 
-export default function RecommendationsList({ recommendations, level }: Props) {
+export default function RecommendationsList({ recommendations, title }: Props) {
   if (recommendations.length === 0) return null
 
   const isPositive = (text: string) =>
@@ -13,12 +13,12 @@ export default function RecommendationsList({ recommendations, level }: Props) {
 
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base">
-          {level === 'setlist' ? 'Setlist Recommendations' : 'Recommendations'}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+      {title && (
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">{title}</CardTitle>
+        </CardHeader>
+      )}
+      <CardContent className={title ? '' : 'pt-1'}>
         <ul className="space-y-2">
           {recommendations.map((rec, i) => (
             <li key={i} className="flex items-start gap-2 text-sm">

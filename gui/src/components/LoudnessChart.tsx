@@ -10,11 +10,10 @@ import {
   Legend,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { SongAnalysis } from '@/lib/store'
+import { useStore, type SongAnalysis } from '@/lib/store'
 
 interface Props {
   song: SongAnalysis
-  viewMode: 'beginner' | 'advanced'
 }
 
 function formatTime(seconds: number) {
@@ -23,11 +22,14 @@ function formatTime(seconds: number) {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-export default function LoudnessChart({ song, viewMode }: Props) {
+export default function LoudnessChart({ song }: Props) {
+  const unit = useStore((s) => s.unit)
+  const unitLabel = unit === 'lufs' ? 'LUFS' : 'dB'
+
   const data = song.loudness.timestamps.map((t, i) => ({
     time: t,
     shortterm: song.loudness.shortterm_lufs[i] ?? null,
-    momentary: viewMode === 'advanced' ? (song.loudness.momentary_lufs[i] ?? null) : null,
+    momentary: song.loudness.momentary_lufs[i] ?? null,
   }))
 
   // Downsample for performance if too many points
@@ -54,11 +56,11 @@ export default function LoudnessChart({ song, viewMode }: Props) {
             <YAxis
               tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
               domain={['auto', 'auto']}
-              label={{ value: 'LUFS', angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: 'var(--muted-foreground)' } }}
+              label={{ value: unitLabel, angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: 'var(--muted-foreground)' } }}
             />
             <Tooltip
               labelFormatter={(v) => formatTime(Number(v))}
-              formatter={(v) => [Number(v).toFixed(1) + ' LUFS', '']}
+              formatter={(v) => [Number(v).toFixed(1) + ` ${unitLabel}`, '']}
               contentStyle={{ backgroundColor: 'var(--popover)', border: '1px solid var(--border)', color: 'var(--popover-foreground)' }}
             />
             <Legend />
@@ -78,17 +80,15 @@ export default function LoudnessChart({ song, viewMode }: Props) {
               strokeWidth={1.5}
               name="Short-term"
             />
-            {viewMode === 'advanced' && (
-              <Line
-                type="monotone"
-                dataKey="momentary"
-                stroke="var(--chart-3)"
-                dot={false}
-                strokeWidth={0.8}
-                opacity={0.6}
-                name="Momentary"
-              />
-            )}
+            <Line
+              type="monotone"
+              dataKey="momentary"
+              stroke="var(--chart-3)"
+              dot={false}
+              strokeWidth={0.8}
+              opacity={0.6}
+              name="Momentary"
+            />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
