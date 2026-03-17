@@ -4,6 +4,9 @@ directories:
   buildResources: build
   output: out
 
+publish:
+  provider: github
+
 extraResources:
   - from: ../cpp/build/evensteven
     to: bin/evensteven

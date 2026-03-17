@@ -72,21 +72,10 @@ jobs:
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
 
-      - name: Build & Package
+      - name: Build & Publish
         run: |
           cd gui
           npm ci
-          npm run dist
+          npm run build && npx electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            gui/out/*.dmg
-            gui/out/*.exe
-            gui/out/*.AppImage
-            gui/out/*.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
