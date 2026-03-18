@@ -1,8 +1,42 @@
 import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron'
 import path from 'node:path'
 import { EngineProcess, getEnginePath } from './engine'
-import { execFile } from 'node:child_process'
+import { execFile, execFileSync } from 'node:child_process'
 import fs from 'node:fs'
+
+function findExecutable(candidates: string[]): string | null {
+  for (const c of candidates) {
+    // Absolute path — just check it exists
+    if (path.isAbsolute(c)) {
+      if (fs.existsSync(c)) return c
+      continue
+    }
+    // Bare name — try which/where
+    try {
+      const cmd = process.platform === 'win32' ? 'where' : 'which'
+      const result = execFileSync(cmd, [c], { timeout: 3000, stdio: ['ignore', 'pipe', 'ignore'] })
+      const resolved = result.toString().trim().split('\n')[0]
+      if (resolved && fs.existsSync(resolved)) return resolved
+    } catch { /* not found */ }
+  }
+  return null
+}
+
+function findMatlab(): string | null {
+  return findExecutable(
+    process.platform === 'win32'
+      ? ['matlab.exe']
+      : ['/Applications/MATLAB.app/bin/matlab', '/usr/local/bin/matlab', 'matlab']
+  )
+}
+
+function findOctave(): string | null {
+  return findExecutable(
+    process.platform === 'win32'
+      ? ['octave-cli.exe', 'octave.exe']
+      : ['/opt/homebrew/bin/octave', '/usr/local/bin/octave', 'octave-cli', 'octave']
+  )
+}
 
 let mainWindow: BrowserWindow | null = null
 let currentEngine: EngineProcess | null = null
@@ -221,4 +255,46 @@ ipcMain.handle('load-project', async () => {
     return JSON.parse(json)
   }
   return null
+})
+
+ipcMain.handle('generate-plots', async (_event, args: { analysisJsonPath: string, outputDir: string }) => {
+  const matlabDir = app.isPackaged
+    ? path.join(process.resourcesPath, 'matlab')
+    : path.join(__dirname, '../../matlab')
+
+  const runnerScript = path.join(matlabDir, 'generate_all_plots.m')
+  if (!fs.existsSync(runnerScript)) {
+    return { success: false, error: 'MATLAB scripts not found' }
+  }
+
+  const matlab = findMatlab()
+  const octave = findOctave()
+
+  if (!matlab && !octave) {
+    return { success: false, error: 'Neither MATLAB nor Octave found. Install Octave (brew install octave) or MATLAB to generate plots.' }
+  }
+
+  const jsonPath = args.analysisJsonPath.replace(/'/g, "''")
+  const outDir = args.outputDir.replace(/'/g, "''")
+  const matlabCmd = `addpath('${matlabDir.replace(/'/g, "''")}'); generate_all_plots('${jsonPath}', '${outDir}'); exit;`
+
+  return new Promise((resolve) => {
+    if (matlab) {
+      execFile(matlab, ['-batch', matlabCmd], { timeout: 120000 }, (err) => {
+        if (err) {
+          resolve({ success: false, error: `MATLAB failed: ${err.message}` })
+        } else {
+          resolve({ success: true, outputDir: args.outputDir })
+        }
+      })
+    } else if (octave) {
+      execFile(octave, ['--no-gui', '--eval', matlabCmd], { timeout: 120000 }, (err) => {
+        if (err) {
+          resolve({ success: false, error: `Octave failed: ${err.message}` })
+        } else {
+          resolve({ success: true, outputDir: args.outputDir })
+        }
+      })
+    }
+  })
 })

@@ -95,6 +95,7 @@ interface AppState {
   status: AnalysisStatus
   progress: ProgressInfo | null
   results: AnalysisResults | null
+  outputDir: string | null
   error: string | null
 
   // UI
@@ -110,7 +111,7 @@ interface AppState {
   reorderSongs: (songs: SongEntry[]) => void
   setStatus: (status: AnalysisStatus) => void
   setProgress: (progress: ProgressInfo | null) => void
-  setResults: (results: AnalysisResults | null) => void
+  setResults: (results: AnalysisResults | null, outputDir?: string) => void
   setError: (error: string | null) => void
   selectSong: (id: string | null) => void
   setUnit: (unit: Unit) => void
@@ -124,6 +125,7 @@ const initialState = {
   status: 'idle' as AnalysisStatus,
   progress: null as ProgressInfo | null,
   results: null as AnalysisResults | null,
+  outputDir: null as string | null,
   error: null as string | null,
   selectedSongId: null as string | null,
   unit: 'lufs' as Unit,
@@ -152,9 +154,10 @@ export const useStore = create<AppState>((set) => ({
 
   setStatus: (status) => set({ status }),
   setProgress: (progress) => set({ progress }),
-  setResults: (results) =>
+  setResults: (results, outputDir) =>
     set({
       results,
+      outputDir: outputDir ?? null,
       selectedSongId: results?.songs?.[0]?.song_id ?? null,
     }),
   setError: (error) => set({ error, status: 'error' }),

@@ -32,7 +32,7 @@ export default function ProjectPage() {
         projectName,
       })
       if (result.success) {
-        setResults(result.data)
+        setResults(result.data, result.outputDir)
         setStatus('complete')
       } else {
         setError(result.error || 'Analysis failed')

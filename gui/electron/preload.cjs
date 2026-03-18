@@ -17,6 +17,7 @@ const api = {
   saveProject: (project) => ipcRenderer.invoke('save-project', { project }),
   loadProject: () => ipcRenderer.invoke('load-project'),
   openExternal: (path) => ipcRenderer.invoke('open-external', path),
+  generatePlots: (args) => ipcRenderer.invoke('generate-plots', args),
 }
 
 contextBridge.exposeInMainWorld('electronAPI', api)

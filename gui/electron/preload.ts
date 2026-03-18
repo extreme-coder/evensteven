@@ -43,6 +43,8 @@ const api = {
   loadProject: () => ipcRenderer.invoke('load-project'),
 
   openExternal: (path: string) => ipcRenderer.invoke('open-external', path),
+  generatePlots: (args: { analysisJsonPath: string, outputDir: string }) =>
+    ipcRenderer.invoke('generate-plots', args) as Promise<{ success: boolean, outputDir?: string, error?: string }>,
 }
 
 contextBridge.exposeInMainWorld('electronAPI', api)

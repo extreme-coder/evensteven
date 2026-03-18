@@ -40,7 +40,7 @@ export default function HomePage() {
       }
       const result = await window.electronAPI.loadDemoData()
       if (result.success) {
-        setResults(result.data)
+        setResults(result.data, result.outputDir)
         setStatus('complete')
       } else {
         setError(result.error ?? 'Demo analysis failed')
